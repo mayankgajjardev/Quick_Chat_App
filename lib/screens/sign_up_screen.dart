@@ -9,6 +9,8 @@ import 'package:quickchat/models/user_model.dart';
 import 'package:quickchat/screens/complete_profile_screen.dart';
 import 'package:quickchat/screens/login_screen.dart';
 
+import '../routes.dart';
+
 class SignUpScreen extends StatefulWidget {
   static const String routeName = '/signUp';
   const SignUpScreen({Key? key}) : super(key: key);
@@ -188,8 +190,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             text: "Login",
                             textColor: true,
                             onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  LoginScreen.routeName, (route) => false);
+                              Routes.to(context, LoginScreen());
                             },
                           ),
                         ),

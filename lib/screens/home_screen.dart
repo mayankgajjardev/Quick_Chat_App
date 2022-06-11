@@ -1,8 +1,7 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickchat/components/customDrawer.dart';
 import 'package:quickchat/models/chat_room_model.dart';
@@ -12,10 +11,11 @@ import 'package:quickchat/screens/chat_room_screen.dart';
 import 'package:quickchat/screens/login_screen.dart';
 import 'package:quickchat/screens/search_screen.dart';
 
+import '../routes.dart';
+
 class HomeScreen extends StatefulWidget {
   final UserModel userModel;
   final User authUser;
-  static const String routeName = '/home';
   const HomeScreen({Key? key, required this.userModel, required this.authUser})
       : super(key: key);
 
@@ -33,9 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
-              Navigator.popUntil(context, (route) => route.isFirst);
-              Navigator.pushReplacement(
-                  context, CupertinoPageRoute(builder: (_) => LoginScreen()));
+              Routes.toPopUntil(context);
+              Routes.toReplacement(context, LoginScreen());
             },
             icon: Icon(Icons.exit_to_app),
           ),
@@ -83,14 +82,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 subtitle:
                                     Text(chatRoomModel.lastMessage.toString()),
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                          builder: (_) => ChatRoomScreen(
-                                              targetUser: targetUser,
-                                              chatRoom: chatRoomModel,
-                                              userModel: widget.userModel,
-                                              authUser: widget.authUser)));
+                                  Routes.to(
+                                    context,
+                                    ChatRoomScreen(
+                                      targetUser: targetUser,
+                                      chatRoom: chatRoomModel,
+                                      userModel: widget.userModel,
+                                      authUser: widget.authUser,
+                                    ),
+                                  );
                                 },
                               );
                             } else {
@@ -120,17 +120,25 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              CupertinoPageRoute(
-                  builder: (_) => SearchScreen(
-                      userModel: widget.userModel, authUser: widget.authUser)));
+          Routes.to(
+            context,
+            SearchScreen(
+              userModel: widget.userModel,
+              authUser: widget.authUser,
+            ),
+          );
         },
         child: Icon(Icons.search),
       ),
       drawer: CustomDrawer(
-          Email: widget.userModel.email.toString(),
-          FullName: widget.userModel.fullName.toString()),
+        userModel: UserModel(
+          email: widget.authUser.email,
+          fullName: widget.userModel.fullName,
+          phoneNumber: widget.userModel.phoneNumber,
+          profilePic: widget.userModel.profilePic,
+          uid: widget.authUser.uid,
+        ),
+      ),
     );
   }
 }

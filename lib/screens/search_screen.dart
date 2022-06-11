@@ -4,13 +4,14 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickchat/constant.dart';
 import 'package:quickchat/main.dart';
 import 'package:quickchat/models/chat_room_model.dart';
 import 'package:quickchat/models/user_model.dart';
 import 'package:quickchat/screens/chat_room_screen.dart';
+
+import '../routes.dart';
 
 class SearchScreen extends StatefulWidget {
   final UserModel userModel;
@@ -124,16 +125,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ChatRoomModel? chatRoomModel =
                                       await getChatroomModel(userModel);
                                   if (chatRoomModel != null) {
-                                    Navigator.pop(context);
-                                    Navigator.push(
+                                    Routes.toPop(context);
+                                    Routes.to(
                                       context,
-                                      CupertinoPageRoute(
-                                        builder: (_) => ChatRoomScreen(
-                                          targetUser: userModel,
-                                          authUser: widget.authUser,
-                                          userModel: widget.userModel,
-                                          chatRoom: chatRoomModel,
-                                        ),
+                                      ChatRoomScreen(
+                                        targetUser: userModel,
+                                        authUser: widget.authUser,
+                                        userModel: widget.userModel,
+                                        chatRoom: chatRoomModel,
                                       ),
                                     );
                                   }

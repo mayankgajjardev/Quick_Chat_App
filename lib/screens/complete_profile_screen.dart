@@ -14,6 +14,8 @@ import 'package:quickchat/models/user_model.dart';
 import 'package:quickchat/screens/home_screen.dart';
 import 'package:quickchat/screens/login_screen.dart';
 
+import '../routes.dart';
+
 class CompleteProfileScreen extends StatefulWidget {
   final UserModel userModel;
   final User authUser;
@@ -74,7 +76,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     leading: Icon(Icons.camera),
                     title: Text('Take a photo'),
                     onTap: () {
-                      Navigator.pop(context);
+                      Routes.toPop(context);
                       selectImage(ImageSource.camera);
                     },
                   ),
@@ -82,7 +84,7 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                     leading: Icon(Icons.photo_library),
                     title: Text('Choose from gallery'),
                     onTap: () {
-                      Navigator.pop(context);
+                      Routes.toPop(context);
                       selectImage(ImageSource.gallery);
                     },
                   ),
@@ -125,14 +127,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
             .set(widget.userModel.toMap())
             .then((value) {
           print("Data Done....👍");
-          Navigator.pushAndRemoveUntil(
+          Routes.to(
               context,
-              CupertinoPageRoute(
-                  builder: (_) => HomeScreen(
-                        authUser: widget.authUser,
-                        userModel: widget.userModel,
-                      )),
-              (route) => false);
+              HomeScreen(
+                authUser: widget.authUser,
+                userModel: widget.userModel,
+              ));
         });
       } else {
         customToast(title: 'Please Select Profile Picture...');

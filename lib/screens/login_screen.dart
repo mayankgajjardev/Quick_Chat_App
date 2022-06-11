@@ -2,15 +2,15 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickchat/constant.dart';
 import 'package:quickchat/models/user_model.dart';
 import 'package:quickchat/screens/home_screen.dart';
 import 'package:quickchat/screens/sign_up_screen.dart';
 
+import '../routes.dart';
+
 class LoginScreen extends StatefulWidget {
-  static const String routeName = '/login';
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -49,12 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
         UserModel userModel =
             UserModel.fromMap(userData.data() as Map<String, dynamic>);
         customToast(title: "Login Successful");
-        Navigator.pushAndRemoveUntil(
-            context,
-            CupertinoPageRoute(
-                builder: (_) => HomeScreen(
-                    userModel: userModel, authUser: credential!.user!)),
-            (route) => false);
+        Routes.toRemovUntil(context,
+            HomeScreen(userModel: userModel, authUser: credential.user!));
       } else {
         customToast(title: "Sign Up Failed");
       }
@@ -151,8 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           text: "SignUp",
                           textColor: true,
                           onPressed: () {
-                            Navigator.pushNamed(
-                                context, SignUpScreen.routeName);
+                            Routes.to(context, SignUpScreen());
                           },
                         ),
                       ),

@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quickchat/components/chat_bubble.dart';
 import 'package:quickchat/constant.dart';
 import 'package:quickchat/main.dart';
@@ -58,6 +59,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           .doc(widget.chatRoom.chatRoomId)
           .update(widget.chatRoom.toMap());
     } else {
+      Fluttertoast.showToast(msg: "Message cannot be empty!");
       log("Message is empty");
     }
   }
@@ -214,12 +216,20 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                       style: TextStyle(fontSize: 17),
                     ),
                   ),
-                  IconButton(
-                      onPressed: sendMessage,
-                      icon: Icon(
-                        Icons.send,
-                        color: kPrimaryColor,
-                      )),
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: messageController,
+                    builder: (context, value, child) {
+                      return IconButton(
+                        onPressed: value.text.isNotEmpty ? sendMessage : null,
+                        icon: Icon(
+                          Icons.send,
+                          color: value.text.isNotEmpty
+                              ? kPrimaryColor
+                              : Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             )

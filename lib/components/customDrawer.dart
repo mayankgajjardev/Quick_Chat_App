@@ -1,20 +1,27 @@
-// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously, non_constant_identifier_names, must_be_immutable
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:quickchat/constant.dart';
+import 'package:quickchat/models/user_model.dart';
+import 'package:quickchat/routes.dart';
 import 'package:quickchat/screens/login_screen.dart';
+import 'package:quickchat/screens/profile_screen.dart';
 
-class CustomDrawer extends StatelessWidget {
-  String FullName, Email;
+class CustomDrawer extends StatefulWidget {
+  UserModel userModel;
   CustomDrawer({
     Key? key,
-    required this.FullName,
-    required this.Email,
+    required this.userModel,
   }) : super(key: key);
 
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,25 +34,25 @@ class CustomDrawer extends StatelessWidget {
             ),
             accountName: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(FullName),
+              child: Text(widget.userModel.fullName.toString()),
             ),
             accountEmail: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(Email),
+              child: Text(widget.userModel.email.toString()),
             ),
             currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Text(
-                FullName[0],
-                style: TextStyle(fontSize: 40),
-              ),
+              backgroundImage: NetworkImage("${widget.userModel.profilePic}"),
             ),
           ),
           ListTile(
             leading: Icon(Icons.account_circle),
             title: Text('Profile'),
             onTap: () {
-              Navigator.pop(context);
+              Routes.to(
+                  context,
+                  ProfileScreen(
+                    userModel: widget.userModel,
+                  ));
             },
           ),
           ListTile(

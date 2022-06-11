@@ -42,8 +42,7 @@ class MyApp extends StatelessWidget {
       title: 'QuickChat',
       debugShowCheckedModeBanner: false,
       theme: lightTheme(),
-      initialRoute: LoginScreen.routeName,
-      routes: routes,
+      home: Routes.to(context, LoginScreen()),
     );
   }
 }
